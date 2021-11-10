@@ -7,6 +7,7 @@ use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
 use App\Models\Variant;
 use Illuminate\Http\Request;
+use DB;
 
 class ProductController extends Controller
 {
@@ -17,8 +18,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('products.index', compact('products'));
+        $products = DB::table('products')->get();
+        $product_variants = DB::table('product_variant_prices')
+                                ->leftJoin('product_variants as one', 'one.id', '=', 'product_variant_prices.product_variant_one')
+                                ->leftJoin('product_variants as two', 'two.id', '=', 'product_variant_prices.product_variant_two')
+                                ->leftJoin('product_variants as three', 'three.id', '=', 'product_variant_prices.product_variant_three')
+                                ->select('product_variant_prices.*', 'one.variant as variant1', 'two.variant as variant2', 'three.variant as variant3')         
+                                ->get();
+        return view('products.index', compact('products','product_variants'));
     }
 
     /**

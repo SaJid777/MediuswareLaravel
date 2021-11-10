@@ -53,25 +53,29 @@
                     <tbody>
                     @foreach( $products as $product )
                     <tr>
-                        <td>{{$product->id}}</td>
-                        <td>{{$product->title}} <br> Created at : {{ date("d-M-Y",strtotime($product->created_at))}}</td>
-                        <td>{{$product->description}}</td>
-                        <td>
-                            <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                        <td style="width:2%;">{{$product->id}}</td>
+                        <td style="width:10%;">{{$product->title}} <br> Created at : {{ date("d-M-Y",strtotime($product->created_at))}}</td>
+                        <td style="width:40%;" >{{$product->description}}</td>
+                        <td style="width:43%;">
+                            @foreach($product_variants as $product_variant)
+                                @if( $product_variant->product_id == $product->id )
+                                    <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
 
-                                <dt class="col-sm-3 pb-0">
-                                    SM/ Red/ V-Nick
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dt class="col-sm-4 pb-0">Price : {{ number_format(200,2) }}</dt>
-                                        <dd class="col-sm-8 pb-0">InStock : {{ number_format(50,2) }}</dd>
+                                        <dt class="col-sm-3 pb-0">
+                                            {{$product_variant->variant1}}/ {{$product_variant->variant2}}/ {{$product_variant->variant3}}
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            <dl class="row mb-0">
+                                                <dt class="col-sm-3 pb-0">Price : {{ number_format($product_variant->price,2) }}</dt>
+                                                <dd class="col-sm-9 pb-0">InStock : {{ number_format($product_variant->stock,2) }}</dd>
+                                            </dl>
+                                        </dd>
                                     </dl>
-                                </dd>
-                            </dl>
+                                @endif
+                            @endforeach
                             <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
                         </td>
-                        <td>
+                        <td style="width:5%;">
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ route('product.edit', 1) }}" class="btn btn-success">Edit</a>
                             </div>
